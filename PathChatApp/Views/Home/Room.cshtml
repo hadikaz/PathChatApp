@@ -1,0 +1,150 @@
+﻿@model Room
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Chat App</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+        <form class="form-inline my-2 my-lg-0">
+            <label class="mr-3">Nick name:</label>
+            <input class="form-control mr-sm-2" type="text" placeholder="nickname" id="nickname">
+            <button id="nicknameBtn" onclick="getNicknameVal()" class="btn btn-outline-success my-2 my-sm-0" type="button">Ok</button>
+        </form>
+    </div>
+</nav>
+
+<div class="col-sm-10 room-header-color">
+    <div class="row  char-header-color"><p class="ml-4 mt-2">Messages</p></div>
+    <div class="row m-2 chat_color message-body">
+        <ul class="chat-body">
+            
+                @foreach (var message in Model.Messages)
+                {
+            <li>
+                <div class="message">
+                    <header>@message.SenderName :</header>
+                    <p>@message.MessageText</p>
+                    <footer>@message.CreatedTime</footer>
+                </div>
+            </li>
+                }
+               
+           
+            
+        </ul>
+
+
+    </div>
+    <form  onsubmit="sendMessage(event)" asp-controller="Home" asp-action="SendMessage">
+        <div class="row">
+
+            <div class="col-sm-2">
+                <p>New Message :</p>
+            </div>
+            <div class="col-sm-4">
+                <input type="hidden" value="@Model.Id" name="roomId" />
+                <input type="hidden" value="@Model.RoomName" name="roomName" />
+                <input type="hidden" value="" name="senderName" id="nicknameMonitor" />
+                <input type="text" class="form-control" name="message" id="textMessage">
+            </div>
+            <div class="col-sm-2">
+                <button id="sendBtn" type="submit" class="btn btn-outline-success">Send</button>
+            </div>
+            <div class="col-sm-2">
+                <button id="join" type="button" class="btn btn-primary" onclick="joinChat()">Join</button>
+            </div>
+        </div>
+    </form>
+    
+</div>
+
+@section scripts {
+    <script src="~/js/signalr.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+
+        var connection = new signalR.HubConnectionBuilder().withUrl("/roomHub").build();
+
+        var _connectionId = '';
+
+
+        connection.on("RecieveMessage", function (data) {
+            console.log(data);
+            var listElement = document.createElement("li");
+            var message = document.createElement("div");
+            message.classList.add("message");
+            var messageHeader = document.createElement("header");
+            messageHeader.appendChild(document.createTextNode(data.senderName));
+            var messageBody = document.createElement("p");
+            messageBody.appendChild(document.createTextNode(data.messageText));
+            var messageFooter = document.createElement("footer");
+            messageFooter.appendChild(document.createTextNode(data.createdTime));
+            message.appendChild(messageHeader);
+            message.appendChild(messageBody);
+            message.appendChild(messageFooter);
+            listElement.appendChild(message);
+            document.querySelector('.chat-body').append(listElement);
+            
+
+        })
+
+
+
+        var joinRoom = function () {
+            console.log(_connectionId);
+            
+
+             axios({
+                    method: 'post',
+                    url: '/Rooms/JoinRoom',
+                    data: {
+                        "connectionId": _connectionId,
+                        "roomName": '@Model.RoomName'
+                    }
+                })
+                .then(function (response) {
+                    console.log("Room Joined", response);
+                })
+                .catch(function (error) {
+                    console.log("Failed", error);
+                });
+
+           
+        }
+
+        connection.start()
+            .then(function () {
+                connection.invoke('getConnectionId')
+                    .then(function (connectionId) {
+                        _connectionId = connectionId
+
+                        joinRoom();
+                    })
+            })
+            .catch(function (err) { console.log(err) })
+
+
+        var sendMessage = function (event) {
+            event.preventDefault();
+
+            var data = new FormData(event.target);
+
+            axios.post('/Rooms/SendMessage', data)
+                .then(res => {
+                    console.log("message sent")
+                })
+                .catch(err => {
+                    console.log("failed to sent", err);
+                    })
+        }
+
+        
+
+    </script>
+}

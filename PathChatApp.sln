@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30717.126
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathChatApp", "PathChatApp\PathChatApp.csproj", "{7FA5876F-B748-435E-A999-DE6E9188858F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7FA5876F-B748-435E-A999-DE6E9188858F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7FA5876F-B748-435E-A999-DE6E9188858F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7FA5876F-B748-435E-A999-DE6E9188858F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7FA5876F-B748-435E-A999-DE6E9188858F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {423D245A-C3A9-44F3-AB5C-C54A88A77DCE}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Room>
+
+
+
+    <div class="row  room_color"><p class="ml-4 mt-2">Rooms</p></div>
+    <div class="clearfix"></div>
+    <div class="row float-right m-2">
+        <ul class="list-group">
+            @foreach (var room in Model)
+            {
+                <li class="list-group-item">
+                    <a asp-controller="Home" asp-action="Room" asp-route-id="@room.Id" class="btn btn-outline-success btn-block" role="button">
+                        @room.RoomName
+                    </a>
+                </li>
+            }
+
+        </ul>
+        
+
+        <button type="button" class="btn btn-success mt-2" data-toggle="modal" data-target="#myModal">Add Room</button>
+    </div>
+    
+    <div class="clearfix"></div>
+    
+
